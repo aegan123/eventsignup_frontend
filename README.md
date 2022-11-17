@@ -1,8 +1,25 @@
-# Getting Started with Create React App
+# Eventsignup Frontend
+Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.\
+Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Used technologies
 
-## Available Scripts
+- React 18.2.x
+- React Router
+- Node 16
+- TypeScript
+- Bulma css
+- FontAwesome icons
+
+## Development
+Highly recommended IDE is JetBrains WebStorm.
+
+CSS file can be generated with this command:\
+`npm run css-build`
+
+Features/bug fixes are to be developed in their own branches.
+
+## React Scripts
 
 In the project directory, you can run:
 
