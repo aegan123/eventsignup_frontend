@@ -17,6 +17,7 @@ import EventManagement from "./components/EventManagement";
 import AdminPage from "./components/AdminPage";
 import NewEvent from "./components/NewEvent";
 import Logout from "./components/Logout";
+import IndexRoute from "./components/IndexRoute";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         element: <Root/>,
         errorElement: <ErrorPage/>,
         children: [
+            {
+                index: true,
+                element: <IndexRoute/>
+            },
             {
                 path: "signup/:eventId",
                 element: <EventSignup/>
