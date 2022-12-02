@@ -15,6 +15,6 @@ export type Event = {
     bannerImg?: string
     minParticipants?: number
     maxParticipants?: number
-    quotas?: Map<string, string>
-    form?: Map<string, {}>
+    quotas?: {}
+    form?: {}
 }
