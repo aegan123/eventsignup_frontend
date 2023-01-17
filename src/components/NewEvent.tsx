@@ -9,6 +9,7 @@ import 'react-form-builder2/dist/app.css';
 import ClipLoader from "react-spinners/ClipLoader";
 import {postEvent, postImageData} from "./Utilities";
 import {Quota} from "../types/Quota";
+import {LocalDateTime, ZoneId} from "@js-joda/core";
 
 
 interface NewEventProps {
@@ -210,14 +211,8 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         })
     }
 
-    // Source: https://stackoverflow.com/a/6777470
-    // FIXME does not always work!
-    private convertLocalDateToUTCISOString(inputDate: string | number | Date): string {
-        const date = new Date(inputDate)
-        const inputInUTC = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
-            date.getUTCDate(), date.getUTCHours(),
-            date.getUTCMinutes(), date.getUTCSeconds())
-        return new Date(inputInUTC).toISOString()
+    private convertLocalDateToUTCISOString(inputDate: string): string {
+        return LocalDateTime.parse(inputDate).atZone(ZoneId.SYSTEM).withZoneSameInstant(ZoneId.UTC).toString()
     }
 
     private handleFormBuilderPost(data: {}) {
