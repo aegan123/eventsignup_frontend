@@ -8,6 +8,7 @@ import {ReactFormBuilder, ReactFormGenerator} from 'react-form-builder2';
 import 'react-form-builder2/dist/app.css';
 import ClipLoader from "react-spinners/ClipLoader";
 import {postEvent, postImageData} from "./Utilities";
+import {Quota} from "../types/Quota";
 
 
 interface NewEventProps {
@@ -26,10 +27,8 @@ interface NewEventState {
     bannerImg?: string
     minParticipants?: string
     maxParticipants?: string
-    quotas?: Map<string, string>[]
+    quotas?: Quota[]
     prettyPrintQuotas?: string
-    modalInputGroup?: string
-    modalInputQuota?: string
     // Visibility modifiers
     isLoading: boolean
     endDateVisible: boolean
@@ -56,8 +55,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     private readonly classNameModalNonActive = "modal"
     private readonly classNameMessageSuccess = "message is-success"
     private readonly classNameMessageFailure = "message is-danger"
-    private latestIndex = 0
-    private tempQuotas: Map<string, string>[] = []
+    private tempQuotas: Quota[] = []
     private newEvent: Event | undefined
     private formBuilderData: {} | any
 
@@ -82,7 +80,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             showUploadError: false,
             showImageFileError: false
         }
-        this.state = Object.assign(this.cloneInitialState(), {'quotas': [new Map<string, string>()]})
+        this.state = Object.assign(this.cloneInitialState(), {'quotas': [{group: "", quota: ""}]})
         this.addInputRow = this.addInputRow.bind(this)
         this.showModal = this.showModal.bind(this)
         this.hideModal = this.hideModal.bind(this)
@@ -104,7 +102,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         let returnValue = ""
         if (this.tempQuotas && this.tempQuotas.length) {
             this.tempQuotas.forEach(quota => {
-                returnValue += quota.entries().next().value + "\n"
+                returnValue += quota.group + ": " + quota.quota + "\n"
             })
         }
         return returnValue
@@ -124,10 +122,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
 
     private saveQuotas(): void {
         this.setState({
-            'isLoading': true
-        })
-        this.saveQuota()
-        this.setState({
             'prettyPrintQuotas': this.formatQuotas(),
             'isLoading': false
         })
@@ -135,34 +129,36 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     }
 
     private addInputRow(): void {
-        this.saveQuota()
-        this.state.quotas?.push(new Map<string, string>())
-    }
-
-    private saveQuotaGroup(value: string, index: number): void {
-        this.setState({
-            'modalInputGroup': value
-        })
-        this.latestIndex = index
-    }
-
-    private saveQuotaValue(value: string, index: number): void {
-        this.setState({
-            'modalInputQuota': value
-        })
-        this.latestIndex = index
-    }
-
-    private saveQuota(): void {
-        const newQuota = new Map<string, string>()
-        newQuota.set(this.state.modalInputGroup as string, this.state.modalInputQuota as string)
         // @ts-ignore
-        this.state.quotas[this.latestIndex] = newQuota // FIXME "Do not mutate state directly. Use setState()"
+        const values = [...this.state.quotas]
+        values.push({group: "", quota: ""} as Quota)
         this.setState({
-            'modalInputGroup': "",
-            'modalInputQuota': ""
+            'quotas': values
         })
-        this.tempQuotas.push(newQuota)
+    }
+
+    private handleHasQuotaChange(event: ChangeEvent<HTMLInputElement>): void {
+        if (!event.target.checked) {
+            this.emptyQuotas()
+        }
+        this.setState({'hasQuotas': event.target.checked})
+    }
+
+    private handleQuotaChange(event: ChangeEvent<HTMLInputElement>, index: number): void {
+        const values = [...this.state.quotas]
+        values[index][event.target.name] = event.target.value
+        this.setState({
+            'quotas': values
+        })
+        this.tempQuotas = values
+    }
+
+    private emptyQuotas(): void {
+        this.tempQuotas = []
+        this.setState({
+            quotas: [{group: "", quota: ""} as Quota],
+            prettyPrintQuotas: ""
+        })
     }
 
     private resetForm(): void {
@@ -175,8 +171,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             minParticipants: "",
             maxParticipants: "",
             prettyPrintQuotas: "",
-            modalInputGroup: "",
-            modalInputQuota: "",
             selectedFile: null
         }))
         this.tempQuotas = []
@@ -206,11 +200,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             this.newEvent.price = Number(this.state.price)
         }
         if (Object.hasOwn(this.state, "quotas")) {
-            let newQuotasMap = new Map<string, string>()
-            this.state.quotas?.forEach(quota => {
-                newQuotasMap = new Map<string, string>([...newQuotasMap, ...quota])
-            })
-            this.newEvent.quotas = Object.fromEntries(newQuotasMap)
+            this.newEvent.quotas = this.state.quotas
         }
         if (Object.hasOwn(this.state, "signupEnds")) {
             this.newEvent.signupEnds = this.convertLocalDateToUTCISOString(this.state.signupEnds as string)
@@ -469,7 +459,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         <div className={"control"}>
                             <label className="checkbox">
                                 <input type="checkbox" className={"checkbox"} checked={this.state.hasQuotas}
-                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.setState({'hasQuotas': event.target.checked})}/>
+                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleHasQuotaChange(event)}/>
                                 Tapahtumalla on osallistujakiintijöitä
                             </label>
                         </div>
@@ -509,18 +499,18 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                     <button className={"button is-small"} onClick={this.addInputRow}>Lisää uusi kiintiö
                                     </button>
                                 </div>
-                                {this.state.quotas?.map((quota, index: number) => (
+                                {this.state.quotas?.map((quota: Quota, index: number) => (
                                     <div className={"field is-grouped"}>
                                         <div className={"control"}>
-                                            <input key={index.toString()} name={"group_" + index.toString()}
-                                                   value={Array.from(quota.keys())[0]} placeholder={"Käyttäjäryhmä"}
-                                                   onChange={e => this.saveQuotaGroup(e.target.value, index)}/>
+                                            <input key={"group_" + index.toString()} name={"group"}
+                                                   value={quota.group} placeholder={"Käyttäjäryhmä"}
+                                                   onChange={event => this.handleQuotaChange(event, index)}/>
                                         </div>
                                         <div className={"control"}>
-                                            <input type={"number"} key={Array.from(quota.keys())[0]}
-                                                   name={"quota_" + index.toString()}
-                                                   value={Array.from(quota.values())[0]} placeholder={"Kiintiö"}
-                                                   onChange={e => this.saveQuotaValue(e.target.value, index)}/>
+                                            <input type={"number"} key={"quota_" + index.toString()}
+                                                   name={"quota"}
+                                                   value={quota.quota} placeholder={"Kiintiö"}
+                                                   onChange={event => this.handleQuotaChange(event, index)}/>
                                         </div>
                                         <div className={"control"}>
                                             <button className="delete" onClick={() => this.deleteQuotaRow(index)}></button>
@@ -536,10 +526,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                     <button className={"button"} onClick={this.hideModal}>Peruuta</button>
                                 </div>
                             </section>
-                            {/*<footer className="modal-card-foot">*/}
-                            {/*    <button className="button is-success" onClick={saveQuotas}>Tallenna</button>*/}
-                            {/*    <button className="button is-text" onClick={hideModal}>Peruuta</button>*/}
-                            {/*</footer>*/}
                         </div>
                     </div>
                 }
