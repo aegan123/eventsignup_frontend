@@ -367,6 +367,8 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         return (
             <>
                 {(!this.state.isSubmitted && !this.state.isFormBuilderVisible) &&
+                    <div className={"columns is-gapless is-centered"}>
+                        <div className={"column is-half"}>
                     <section className={"section"}>
                         <p>
                             Pakolliset kentät on merkitty tähdellä (*).
@@ -571,6 +573,8 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         </div>
 
                     </section>
+                    </div>
+                    </div>
                 }
                 {this.state.isModalVisible &&
                     <div
