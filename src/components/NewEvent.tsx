@@ -246,6 +246,14 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         'isLoading': false
                     })
                 }
+                if (response.status === 400 || response.status === 500) {
+                    this.setState({
+                        'showError': true,
+                        'isFormBuilderVisible': false,
+                        'isSubmitted': false,
+                        'isLoading': false
+                    })
+                }
             })
             .catch(error => {
                 this.setState({
