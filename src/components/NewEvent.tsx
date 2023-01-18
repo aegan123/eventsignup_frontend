@@ -196,13 +196,13 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (Object.hasOwn(this.state, "bannerImg")) {
             this.newEvent.bannerImg = this.state.bannerImg
         }
-        if (Object.hasOwn(this.state, "endDate")) {
+        if (Object.hasOwn(this.state, "endDate") && this.state.endDate !== "") {
             this.newEvent.endDate = this.convertLocalDateToUTCISOString(this.state.endDate as string)
         }
-        if (Object.hasOwn(this.state, "maxParticipants")) {
+        if (Object.hasOwn(this.state, "maxParticipants") && this.state.maxParticipants !== "") {
             this.newEvent.maxParticipants = Number(this.state.maxParticipants)
         }
-        if (Object.hasOwn(this.state, "minParticipants")) {
+        if (Object.hasOwn(this.state, "minParticipants") && this.state.minParticipants !== "") {
             this.newEvent.minParticipants = Number(this.state.minParticipants)
         }
         if (Object.hasOwn(this.state, "price")) {
@@ -211,7 +211,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (Object.hasOwn(this.state, "quotas") && this.quotaHasValidItems()) {
             this.newEvent.quotas = this.state.quotas
         }
-        if (Object.hasOwn(this.state, "signupEnds")) {
+        if (Object.hasOwn(this.state, "signupEnds") && this.state.signupEnds !== "") {
             this.newEvent.signupEnds = this.convertLocalDateToUTCISOString(this.state.signupEnds as string)
         }
         this.setState({
@@ -297,6 +297,40 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
 
     }
 
+    private handleEndDateStatus(checked: boolean) {
+        if (!checked) {
+            this.setState({
+                'endDateVisible': checked,
+                'endDate': ""
+            })
+        } else {
+            this.setState({'endDateVisible': checked})
+        }
+    }
+
+    private handleSignupEndsStatus(checked: boolean) {
+        if (!checked) {
+            this.setState({
+                'signupEnds': "",
+                'signupEndDateVisible': checked
+            })
+        } else {
+            this.setState({'signupEndDateVisible': checked})
+        }
+    }
+
+    private handleParticipantLimitsStatus(checked: boolean) {
+        if (!checked) {
+            this.setState({
+                'hasParticipantLimits': checked,
+                'minParticipants': "",
+                'maxParticipants': ""
+            })
+        } else {
+            this.setState({'hasParticipantLimits': checked})
+        }
+    }
+
     render() {
         return (
             <>
@@ -353,7 +387,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                             <div className={"control"}>
                                 <label className="checkbox">
                                     <input type="checkbox" className={"checkbox"} checked={this.state.endDateVisible}
-                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.setState({'endDateVisible': event.target.checked})}/>
+                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleEndDateStatus(event.target.checked)}/>
                                     Tapahtumalla on myös lopetuspäivä
                                 </label>
                             </div>
@@ -382,7 +416,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 <label className="checkbox">
                                     <input type="checkbox" className={"checkbox"}
                                            checked={this.state.signupEndDateVisible}
-                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.setState({'signupEndDateVisible': event.target.checked})}/>
+                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleSignupEndsStatus(event.target.checked)}/>
                                     Tapahtumaan ilmoittautumisella on myös päättymispäivä
                                 </label>
                             </div>
@@ -432,7 +466,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         <div className={"control"}>
                             <label className="checkbox">
                                 <input type="checkbox" className={"checkbox"} checked={this.state.hasParticipantLimits}
-                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.setState({'hasParticipantLimits': event.target.checked})}/>
+                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleParticipantLimitsStatus(event.target.checked)}/>
                                 Tapahtumalla on osallistujamäärä rajoituksia
                             </label>
                         </div>
