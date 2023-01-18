@@ -162,6 +162,14 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         })
     }
 
+    private quotaHasValidItems() {
+        // Length is never zero and lengths > 1 are always valid
+        if (this.state.quotas && this.state.quotas?.length === 1) {
+            return this.state.quotas[0].quota !== "" && this.state.quotas[0].group !== ""
+        }
+        return true
+    }
+
     private resetForm(): void {
         this.setState(Object.assign(this.cloneInitialState(), {
             quotas: [],
@@ -200,7 +208,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (Object.hasOwn(this.state, "price")) {
             this.newEvent.price = Number(this.state.price)
         }
-        if (Object.hasOwn(this.state, "quotas")) {
+        if (Object.hasOwn(this.state, "quotas") && this.quotaHasValidItems()) {
             this.newEvent.quotas = this.state.quotas
         }
         if (Object.hasOwn(this.state, "signupEnds")) {
