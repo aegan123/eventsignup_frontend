@@ -6,7 +6,6 @@ import {ChangeEvent, Component} from "react";
 import {Event} from "../types/Event";
 import {ReactFormBuilder, ReactFormGenerator} from 'react-form-builder2';
 import 'react-form-builder2/dist/app.css';
-import ClipLoader from "react-spinners/ClipLoader";
 import {postEvent, postImageData} from "./Utilities";
 import {Quota} from "../types/Quota";
 import {LocalDateTime, ZoneId} from "@js-joda/core";
@@ -86,7 +85,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             showImageFileServerError: false
         }
         this.state = Object.assign(this.cloneInitialState(), {'quotas': [{group: "", quota: ""}]})
-        this.addInputRow = this.addInputRow.bind(this)
+        this.addInputRowForQuotas = this.addInputRowForQuotas.bind(this)
         this.showModal = this.showModal.bind(this)
         this.hideModal = this.hideModal.bind(this)
         this.saveQuotas = this.saveQuotas.bind(this)
@@ -133,7 +132,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         this.hideModal()
     }
 
-    private addInputRow(): void {
+    private addInputRowForQuotas(): void {
         // @ts-ignore
         const values = [...this.state.quotas]
         values.push({group: "", quota: ""} as Quota)
@@ -146,7 +145,9 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (!event.target.checked) {
             this.emptyQuotas()
         }
-        this.setState({'hasQuotas': event.target.checked})
+        this.setState({
+            'hasQuotas': event.target.checked
+        })
     }
 
     private handleQuotaChange(event: ChangeEvent<HTMLInputElement>, index: number): void {
@@ -159,7 +160,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     }
 
     private emptyQuotas(): void {
-        this.tempQuotas = []
+        this.tempQuotas.length = 0 // see: https://stackoverflow.com/a/1232046
         this.setState({
             quotas: [{group: "", quota: ""} as Quota],
             prettyPrintQuotas: ""
@@ -186,7 +187,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             prettyPrintQuotas: "",
             selectedFile: null
         }))
-        this.tempQuotas = []
+        this.tempQuotas.length = 0  // see: https://stackoverflow.com/a/1232046
     }
 
     private saveForm(): void {
@@ -235,7 +236,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (typeof this.newEvent !== "undefined") {
             this.newEvent.form = {'formData': this.formBuilderData}
         }
-        // this.setState({'isLoading': true})
         postEvent("/event/create", this.newEvent)
             .then(response => {
                 if (response.ok) {
@@ -266,18 +266,14 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     }
 
     private closeMessage(): void {
-        this.setState({'showError': false, 'showSuccess': false, 'isFormBuilderVisible': false})
+        this.setState({
+            'showError': false,
+            'showSuccess': false,
+            'isFormBuilderVisible': false
+        })
     }
 
     private async handleImageUpload(file: File) {
-        let dataToUpload: Blob
-        file.arrayBuffer().then((arrayBuffer) => {
-            dataToUpload = new Blob([new Uint8Array(arrayBuffer)], {type: file.type})
-        })
-            .catch(error => {
-                // FIXME do something else instead of logging
-                console.log(error)
-            })
         postImageData("/event/banner/add", file)
             .then(async response => {
                 if (response.ok) {
@@ -301,9 +297,13 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                 }
             })
             .catch(error => {
-                this.setState({'showUploadError': true})
+                this.setState({
+                    'showUploadError': true
+                })
             })
-        this.setState({'isLoading': false})
+        this.setState({
+            'isLoading': false
+        })
     }
 
     private deleteQuotaRow(index: number) {
@@ -325,7 +325,9 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                 'endDate': ""
             })
         } else {
-            this.setState({'endDateVisible': checked})
+            this.setState({
+                'endDateVisible': checked
+            })
         }
     }
 
@@ -336,7 +338,9 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                 'signupEndDateVisible': checked
             })
         } else {
-            this.setState({'signupEndDateVisible': checked})
+            this.setState({
+                'signupEndDateVisible': checked
+            })
         }
     }
 
@@ -348,7 +352,9 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                 'maxParticipants': ""
             })
         } else {
-            this.setState({'hasParticipantLimits': checked})
+            this.setState({
+                'hasParticipantLimits': checked
+            })
         }
     }
 
@@ -483,20 +489,23 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         </div>
                         {this.state.showImageFileError &&
                             <div className="notification is-danger is-light">
-                                <button className="delete" onClick={() => this.setState({'showImageFileError': false})}></button>
+                                <button className="delete"
+                                        onClick={() => this.setState({'showImageFileError': false})}></button>
                                 Valittu tiedosto ei ole validi kuvatiedosto. Ole hyvä ja valitse toinen tiedosto.
                             </div>
                         }
                         {this.state.showImageFileServerError &&
                             <div className="notification is-warning is-light">
-                                <button className="delete" onClick={() => this.setState({'showImageFileServerError': false})}></button>
+                                <button className="delete"
+                                        onClick={() => this.setState({'showImageFileServerError': false})}></button>
                                 Tallennuksessa tapahtui tuntematon virhe. Yritä myöhemmin uudestaan.<br/>
                                 Mikäli virhe ei poistu, ota yhteyttä sivuston ylläpitäjään.
                             </div>
                         }
                         {this.state.showImageFileSuccess &&
                             <div className="notification is-success is-light">
-                                <button className="delete" onClick={() => this.setState({'showImageFileSuccess': false})}></button>
+                                <button className="delete"
+                                        onClick={() => this.setState({'showImageFileSuccess': false})}></button>
                                 Kuvan tallennus onnistui!
                             </div>
                         }
@@ -547,7 +556,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 </div>
                                 <button
                                     className={"button"}
-                                    onClick={this.showModal}>{(this.state.quotas && this.state.quotas.length) ? "Muokkaa kiintiöitä" : "Lisää kiintiöitä"}</button>
+                                    onClick={this.showModal}>{this.quotaHasValidItems() ? "Muokkaa kiintiöitä" : "Lisää kiintiöitä"}</button>
                             </div>
                         </>
                         }
@@ -570,7 +579,8 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                             <section className="modal-card-body">
 
                                 <div className={"field"}>
-                                    <button className={"button is-small"} onClick={this.addInputRow}>Lisää uusi kiintiö
+                                    <button className={"button is-small"} onClick={this.addInputRowForQuotas}>Lisää uusi
+                                        kiintiö
                                     </button>
                                 </div>
                                 {this.state.quotas?.map((quota: Quota, index: number) => (
@@ -587,7 +597,8 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                                    onChange={event => this.handleQuotaChange(event, index)}/>
                                         </div>
                                         <div className={"control"}>
-                                            <button className="delete" onClick={() => this.deleteQuotaRow(index)}></button>
+                                            <button className="delete"
+                                                    onClick={() => this.deleteQuotaRow(index)}></button>
                                         </div>
                                     </div>
                                 ))
@@ -677,7 +688,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
 
                     </>
                 }
-                {/*<ClipLoader color={'#fff'} loading={this.state.isLoading} size={150}/>*/}
             </>
         )
     }
