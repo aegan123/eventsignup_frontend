@@ -358,6 +358,11 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         }
     }
 
+    private handleInputChange(event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>): void {
+        // @ts-ignore
+        this.setState({[event.target.name]: event.target.value })
+    }
+
     render() {
         return (
             <>
@@ -372,7 +377,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 <input id={"name"} name={"name"} className={"input"} type={"text"}
                                        value={this.state.name}
                                        required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'name': e.target.value})}/>
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                             </div>
                         </div>
                         <div className={"field"}>
@@ -381,7 +386,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 <input id={"place"} name={"place"} className={"input"} type={"text"}
                                        value={this.state.place}
                                        required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'place': e.target.value})}/>
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                             </div>
                         </div>
                         <div className={"field"}>
@@ -390,7 +395,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                         <textarea id={"description"} name={"description"} className={"textarea"}
                                   value={this.state.description}
                                   required={true}
-                                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({'description': e.target.value})}/>
+                                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.handleInputChange(e)}/>
                             </div>
                         </div>
                         <div className={"field"}>
@@ -399,7 +404,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 <input id={"price"} name={"price"} className={"input"} type={"number"}
                                        value={this.state.price}
                                        required={false}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'price': e.target.value})}/>
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                             </div>
                         </div>
                         <label
@@ -409,7 +414,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                 <input id={"startDate"} name={"startDate"} className={"input"} type={"datetime-local"}
                                        value={this.state.startDate}
                                        required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'startDate': e.target.value})}/>
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                             </div>
                             <div className={"control"}>
                                 <label className="checkbox">
@@ -426,7 +431,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                     <input id={"endDate"} name={"endDate"} className={"input"} type={"datetime-local"}
                                            value={this.state.endDate}
                                            required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'endDate': e.target.value})}/>
+                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                                 </div>
                             </div>
                         }
@@ -437,7 +442,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                        type={"datetime-local"}
                                        value={this.state.signupStarts}
                                        required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'signupStarts': e.target.value})}/>
+                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                             </div>
                             <div className={"control"}>
                                 <label className="checkbox">
@@ -456,7 +461,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                            type={"datetime-local"}
                                            value={this.state.signupEnds}
                                            required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'signupEnds': e.target.value})}/>
+                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                                 </div>
                             </div>
                         }
@@ -524,7 +529,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                            type={"number"}
                                            value={this.state.minParticipants}
                                            required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'minParticipants': e.target.value})}/>
+                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                                 </div>
                             </div>
                             <div className={"field"}>
@@ -534,7 +539,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                                            type={"number"}
                                            value={this.state.maxParticipants}
                                            required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({'maxParticipants': e.target.value})}/>
+                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
                                 </div>
                             </div>
                         </>
