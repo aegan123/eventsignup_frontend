@@ -3,6 +3,8 @@ Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.
 Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
  */
 // Corresponds to its counterpart in the backend.
+import {Quota} from "./Quota";
+
 export type Event = {
     name: string
     place: string
@@ -15,6 +17,6 @@ export type Event = {
     bannerImg?: string
     minParticipants?: number
     maxParticipants?: number
-    quotas?: {}
+    quotas?: Quota[]
     form?: {}
 }
