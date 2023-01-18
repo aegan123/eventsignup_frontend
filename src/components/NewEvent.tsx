@@ -43,6 +43,8 @@ interface NewEventState {
     isSubmitted: boolean
     showUploadError: boolean
     showImageFileError: boolean
+    showImageFileServerError: boolean
+    showImageFileSuccess: boolean
     // Others
     selectedFile?: string
     uploadErrorMessage?: string
@@ -79,7 +81,9 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             showError: false,
             isSubmitted: false,
             showUploadError: false,
-            showImageFileError: false
+            showImageFileError: false,
+            showImageFileSuccess: false,
+            showImageFileServerError: false
         }
         this.state = Object.assign(this.cloneInitialState(), {'quotas': [{group: "", quota: ""}]})
         this.addInputRow = this.addInputRow.bind(this)
@@ -270,13 +274,22 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             .then(async response => {
                 if (response.ok) {
                     const responseJson = await response.json()
-                    this.setState({'bannerImg': responseJson.fileName})
+                    this.setState({
+                        'bannerImg': responseJson.fileName,
+                        'showImageFileSuccess': true
+                    })
                 }
                 if (response.status === 406) {
-                    this.setState({'showImageFileError': true, 'uploadErrorMessage': response.statusText})
+                    this.setState({
+                        'showImageFileError': true,
+                        'uploadErrorMessage': response.statusText
+                    })
                 }
                 if (response.status === 500) {
-                    this.setState({'showUploadError': true})
+                    this.setState({
+                        'showImageFileServerError': true,
+                        'uploadErrorMessage': response.statusText
+                    })
                 }
             })
             .catch(error => {
@@ -459,10 +472,26 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                             </span>
                                 <span className="file-name">{this.state.selectedFile}</span>
                             </label>
-                            {this.state.showImageFileError &&
-                                <p className="help is-danger">{this.state.uploadErrorMessage}</p>
-                            }
                         </div>
+                        {this.state.showImageFileError &&
+                            <div className="notification is-danger is-light">
+                                <button className="delete" onClick={() => this.setState({'showImageFileError': false})}></button>
+                                Valittu tiedosto ei ole validi kuvatiedosto. Ole hyvä ja valitse toinen tiedosto.
+                            </div>
+                        }
+                        {this.state.showImageFileServerError &&
+                            <div className="notification is-warning is-light">
+                                <button className="delete" onClick={() => this.setState({'showImageFileServerError': false})}></button>
+                                Tallennuksessa tapahtui tuntematon virhe. Yritä myöhemmin uudestaan.<br/>
+                                Mikäli virhe ei poistu, ota yhteyttä sivuston ylläpitäjään.
+                            </div>
+                        }
+                        {this.state.showImageFileSuccess &&
+                            <div className="notification is-success is-light">
+                                <button className="delete" onClick={() => this.setState({'showImageFileSuccess': false})}></button>
+                                Kuvan tallennus onnistui!
+                            </div>
+                        }
                         <div className={"control"}>
                             <label className="checkbox">
                                 <input type="checkbox" className={"checkbox"} checked={this.state.hasParticipantLimits}
