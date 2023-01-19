@@ -360,7 +360,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
 
     private handleInputChange(event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>): void {
         // @ts-ignore
-        this.setState({[event.target.name]: event.target.value })
+        this.setState({[event.target.name]: event.target.value})
     }
 
     render() {
@@ -369,211 +369,218 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
                 {(!this.state.isSubmitted && !this.state.isFormBuilderVisible) &&
                     <div className={"columns is-gapless is-centered"}>
                         <div className={"column is-half"}>
-                    <section className={"section"}>
-                        <p>
-                            Pakolliset kentät on merkitty tähdellä (*).
-                        </p>
-                        <div className={"field"}>
-                            <label className={"label"}>Tapahtuman nimi*</label>
-                            <div className={"control"}>
-                                <input id={"name"} name={"name"} className={"input"} type={"text"}
-                                       value={this.state.name}
-                                       required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
-                            </div>
-                        </div>
-                        <div className={"field"}>
-                            <label className={"label"}>Tapahtuman paikka*</label>
-                            <div className={"control"}>
-                                <input id={"place"} name={"place"} className={"input"} type={"text"}
-                                       value={this.state.place}
-                                       required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
-                            </div>
-                        </div>
-                        <div className={"field"}>
-                            <label className={"label"}>Tapahtuman kuvaus*</label>
-                            <div className={"control"}>
+                            <section className={"section"}>
+                                <p>
+                                    Pakolliset kentät on merkitty tähdellä (*).
+                                </p>
+                                <div className={"field"}>
+                                    <label className={"label"}>Tapahtuman nimi*</label>
+                                    <div className={"control"}>
+                                        <input id={"name"} name={"name"} className={"input"} type={"text"}
+                                               value={this.state.name}
+                                               required={true}
+                                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
+                                </div>
+                                <div className={"field"}>
+                                    <label className={"label"}>Tapahtuman paikka*</label>
+                                    <div className={"control"}>
+                                        <input id={"place"} name={"place"} className={"input"} type={"text"}
+                                               value={this.state.place}
+                                               required={true}
+                                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
+                                </div>
+                                <div className={"field"}>
+                                    <label className={"label"}>Tapahtuman kuvaus*</label>
+                                    <div className={"control"}>
                         <textarea id={"description"} name={"description"} className={"textarea"}
                                   value={this.state.description}
                                   required={true}
                                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.handleInputChange(e)}/>
-                            </div>
-                        </div>
-                        <div className={"field"}>
-                            <label className={"label"}>Tapahtuman hinta</label>
-                            <div className={"control"}>
-                                <input id={"price"} name={"price"} className={"input"} type={"number"}
-                                       value={this.state.price}
-                                       required={false}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
-                            </div>
-                        </div>
-                        <label
-                            className={"label"}>{this.state.endDateVisible ? "Tapahtuman aloituspäivä*" : "Tapahtuman ajankohta*"}</label>
-                        <div className={"field is-grouped"}>
-                            <div className={"control"}>
-                                <input id={"startDate"} name={"startDate"} className={"input"} type={"datetime-local"}
-                                       value={this.state.startDate}
-                                       required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
-                            </div>
-                            <div className={"control"}>
-                                <label className="checkbox">
-                                    <input type="checkbox" className={"checkbox"} checked={this.state.endDateVisible}
-                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleEndDateStatus(event.target.checked)}/>
-                                    Tapahtumalla on myös lopetuspäivä
-                                </label>
-                            </div>
-                        </div>
-                        {this.state.endDateVisible &&
-                            <div className={"field"}>
-                                <label className={"label"}>Tapahtuman lopetuspäivä</label>
-                                <div className={"control"}>
-                                    <input id={"endDate"} name={"endDate"} className={"input"} type={"datetime-local"}
-                                           value={this.state.endDate}
-                                           required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        <label className={"label"}>Ilmoittautuminen alkaa*</label>
-                        <div className={"field is-grouped"}>
-                            <div className={"control"}>
-                                <input id={"signupStarts"} name={"signupStarts"} className={"input"}
-                                       type={"datetime-local"}
-                                       value={this.state.signupStarts}
-                                       required={true}
-                                       onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
-                            </div>
-                            <div className={"control"}>
-                                <label className="checkbox">
-                                    <input type="checkbox" className={"checkbox"}
-                                           checked={this.state.signupEndDateVisible}
-                                           onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleSignupEndsStatus(event.target.checked)}/>
-                                    Tapahtumaan ilmoittautumisella on myös päättymispäivä
-                                </label>
-                            </div>
-                        </div>
-                        {this.state.signupEndDateVisible &&
-                            <div className={"field"}>
-                                <label className={"label"}>Ilmoittautuminen päättyy</label>
-                                <div className={"control"}>
-                                    <input id={"signupEnds"} name={"signupEnds"} className={"input"}
-                                           type={"datetime-local"}
-                                           value={this.state.signupEnds}
-                                           required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                <div className={"field"}>
+                                    <label className={"label"}>Tapahtuman hinta</label>
+                                    <div className={"control"}>
+                                        <input id={"price"} name={"price"} className={"input"} type={"number"}
+                                               value={this.state.price}
+                                               required={false}
+                                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        <label className={"label"}>Kuva</label>
-                        <div className="file is-right is-fullwidth">
-                            <label className="file-label">
-                                <div
-                                    className={this.state.isLoading ? this.classNameLoading : this.classNameNotLoading}>
-                                    <input id={"image"} className="file-input" type="file" name="image"
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                               if (e.target.files !== null && e.target.files.length > 0) {
-                                                   this.setState({
-                                                       'isLoading': true,
-                                                       'selectedFile': e.target.files[0].name
-                                                   })
-                                                   this.handleImageUpload(e.target.files[0])
-                                               }
-                                           }} onClick={() => {
-                                        this.setState({'isLoading': true})
-                                    }} alt={"Lisää kuva"}/>
+                                <label
+                                    className={"label"}>{this.state.endDateVisible ? "Tapahtuman aloituspäivä*" : "Tapahtuman ajankohta*"}</label>
+                                <div className={"field is-grouped"}>
+                                    <div className={"control"}>
+                                        <input id={"startDate"} name={"startDate"} className={"input"}
+                                               type={"datetime-local"}
+                                               value={this.state.startDate}
+                                               required={true}
+                                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
+                                    <div className={"control"}>
+                                        <label className="checkbox">
+                                            <input type="checkbox" className={"checkbox"}
+                                                   checked={this.state.endDateVisible}
+                                                   onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleEndDateStatus(event.target.checked)}/>
+                                            Tapahtumalla on myös lopetuspäivä
+                                        </label>
+                                    </div>
                                 </div>
-                                <span className="file-cta">
+                                {this.state.endDateVisible &&
+                                    <div className={"field"}>
+                                        <label className={"label"}>Tapahtuman lopetuspäivä</label>
+                                        <div className={"control"}>
+                                            <input id={"endDate"} name={"endDate"} className={"input"}
+                                                   type={"datetime-local"}
+                                                   value={this.state.endDate}
+                                                   required={false}
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                        </div>
+                                    </div>
+                                }
+                                <label className={"label"}>Ilmoittautuminen alkaa*</label>
+                                <div className={"field is-grouped"}>
+                                    <div className={"control"}>
+                                        <input id={"signupStarts"} name={"signupStarts"} className={"input"}
+                                               type={"datetime-local"}
+                                               value={this.state.signupStarts}
+                                               required={true}
+                                               onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    </div>
+                                    <div className={"control"}>
+                                        <label className="checkbox">
+                                            <input type="checkbox" className={"checkbox"}
+                                                   checked={this.state.signupEndDateVisible}
+                                                   onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleSignupEndsStatus(event.target.checked)}/>
+                                            Tapahtumaan ilmoittautumisella on myös päättymispäivä
+                                        </label>
+                                    </div>
+                                </div>
+                                {this.state.signupEndDateVisible &&
+                                    <div className={"field"}>
+                                        <label className={"label"}>Ilmoittautuminen päättyy</label>
+                                        <div className={"control"}>
+                                            <input id={"signupEnds"} name={"signupEnds"} className={"input"}
+                                                   type={"datetime-local"}
+                                                   value={this.state.signupEnds}
+                                                   required={false}
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                        </div>
+                                    </div>
+                                }
+                                <label className={"label"}>Kuva</label>
+                                <div className="file is-right is-fullwidth">
+                                    <label className="file-label">
+                                        <div
+                                            className={this.state.isLoading ? this.classNameLoading : this.classNameNotLoading}>
+                                            <input id={"image"} className="file-input" type="file" name="image"
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                       if (e.target.files !== null && e.target.files.length > 0) {
+                                                           this.setState({
+                                                               'isLoading': true,
+                                                               'selectedFile': e.target.files[0].name
+                                                           })
+                                                           this.handleImageUpload(e.target.files[0])
+                                                       }
+                                                   }} onClick={() => {
+                                                this.setState({'isLoading': true})
+                                            }} alt={"Lisää kuva"}/>
+                                        </div>
+                                        <span className="file-cta">
                                   <span className="file-icon">
                                     <i className="fas fa-upload"></i>
                                   </span>
                                   <span className="file-label">Valitse kuva…</span>
                             </span>
-                                <span className="file-name">{this.state.selectedFile}</span>
-                            </label>
-                        </div>
-                        {this.state.showImageFileError &&
-                            <div className="notification is-danger is-light">
-                                <button className="delete"
-                                        onClick={() => this.setState({'showImageFileError': false})}></button>
-                                Valittu tiedosto ei ole validi kuvatiedosto. Ole hyvä ja valitse toinen tiedosto.
-                            </div>
-                        }
-                        {this.state.showImageFileServerError &&
-                            <div className="notification is-warning is-light">
-                                <button className="delete"
-                                        onClick={() => this.setState({'showImageFileServerError': false})}></button>
-                                Tallennuksessa tapahtui tuntematon virhe. Yritä myöhemmin uudestaan.<br/>
-                                Mikäli virhe ei poistu, ota yhteyttä sivuston ylläpitäjään.
-                            </div>
-                        }
-                        {this.state.showImageFileSuccess &&
-                            <div className="notification is-success is-light">
-                                <button className="delete"
-                                        onClick={() => this.setState({'showImageFileSuccess': false})}></button>
-                                Kuvan tallennus onnistui!
-                            </div>
-                        }
-                        <div className={"control"}>
-                            <label className="checkbox">
-                                <input type="checkbox" className={"checkbox"} checked={this.state.hasParticipantLimits}
-                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleParticipantLimitsStatus(event.target.checked)}/>
-                                Tapahtumalla on osallistujamäärä rajoituksia
-                            </label>
-                        </div>
-                        {this.state.hasParticipantLimits && <>
-                            <div className={"field"}>
-                                <label className={"label"}>Minimi osallistujamäärä</label>
-                                <div className={"control"}>
-                                    <input id={"minParticipants"} name={"minParticipants"} className={"input"}
-                                           type={"number"}
-                                           value={this.state.minParticipants}
-                                           required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                        <span className="file-name">{this.state.selectedFile}</span>
+                                    </label>
                                 </div>
-                            </div>
-                            <div className={"field"}>
-                                <label className={"label"}>Maksimi osallistujamäärä</label>
+                                {this.state.showImageFileError &&
+                                    <div className="notification is-danger is-light">
+                                        <button className="delete"
+                                                onClick={() => this.setState({'showImageFileError': false})}></button>
+                                        Valittu tiedosto ei ole validi kuvatiedosto. Ole hyvä ja valitse toinen
+                                        tiedosto.
+                                    </div>
+                                }
+                                {this.state.showImageFileServerError &&
+                                    <div className="notification is-warning is-light">
+                                        <button className="delete"
+                                                onClick={() => this.setState({'showImageFileServerError': false})}></button>
+                                        Tallennuksessa tapahtui tuntematon virhe. Yritä myöhemmin uudestaan.<br/>
+                                        Mikäli virhe ei poistu, ota yhteyttä sivuston ylläpitäjään.
+                                    </div>
+                                }
+                                {this.state.showImageFileSuccess &&
+                                    <div className="notification is-success is-light">
+                                        <button className="delete"
+                                                onClick={() => this.setState({'showImageFileSuccess': false})}></button>
+                                        Kuvan tallennus onnistui!
+                                    </div>
+                                }
                                 <div className={"control"}>
-                                    <input id={"maxParticipants"} name={"maxParticipants"} className={"input"}
-                                           type={"number"}
-                                           value={this.state.maxParticipants}
-                                           required={false}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                    <label className="checkbox">
+                                        <input type="checkbox" className={"checkbox"}
+                                               checked={this.state.hasParticipantLimits}
+                                               onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleParticipantLimitsStatus(event.target.checked)}/>
+                                        Tapahtumalla on osallistujamäärä rajoituksia
+                                    </label>
                                 </div>
-                            </div>
-                        </>
-                        }
-                        <div className={"control"}>
-                            <label className="checkbox">
-                                <input type="checkbox" className={"checkbox"} checked={this.state.hasQuotas}
-                                       onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleHasQuotaChange(event)}/>
-                                Tapahtumalla on osallistujakiintijöitä
-                            </label>
-                        </div>
-                        {this.state.hasQuotas && <>
-                            <label className={"label"}>Osallistujakiintiöt</label>
-                            <div className={"field is-grouped"}>
+                                {this.state.hasParticipantLimits && <>
+                                    <div className={"field"}>
+                                        <label className={"label"}>Minimi osallistujamäärä</label>
+                                        <div className={"control"}>
+                                            <input id={"minParticipants"} name={"minParticipants"} className={"input"}
+                                                   type={"number"}
+                                                   value={this.state.minParticipants}
+                                                   required={false}
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                        </div>
+                                    </div>
+                                    <div className={"field"}>
+                                        <label className={"label"}>Maksimi osallistujamäärä</label>
+                                        <div className={"control"}>
+                                            <input id={"maxParticipants"} name={"maxParticipants"} className={"input"}
+                                                   type={"number"}
+                                                   value={this.state.maxParticipants}
+                                                   required={false}
+                                                   onChange={(e: ChangeEvent<HTMLInputElement>) => this.handleInputChange(e)}/>
+                                        </div>
+                                    </div>
+                                </>
+                                }
                                 <div className={"control"}>
+                                    <label className="checkbox">
+                                        <input type="checkbox" className={"checkbox"} checked={this.state.hasQuotas}
+                                               onChange={(event: ChangeEvent<HTMLInputElement>) => this.handleHasQuotaChange(event)}/>
+                                        Tapahtumalla on osallistujakiintijöitä
+                                    </label>
+                                </div>
+                                {this.state.hasQuotas && <>
+                                    <label className={"label"}>Osallistujakiintiöt</label>
+                                    <div className={"field is-grouped"}>
+                                        <div className={"control"}>
                                 <textarea id={"quotas"} name={"quotas"} className={"textarea"} readOnly={true}
                                           value={this.state.prettyPrintQuotas}
                                           required={false} disabled={true}/>
+                                        </div>
+                                        <button
+                                            className={"button"}
+                                            onClick={this.showModal}>{this.quotaHasValidItems() ? "Muokkaa kiintiöitä" : "Lisää kiintiöitä"}</button>
+                                    </div>
+                                </>
+                                }
+                                <div className={"field is-grouped"}>
+                                    <button className="button is-link" onClick={this.saveForm}>Jatka</button>
+                                    <button className="button is-text" type={"reset"}
+                                            onClick={this.resetForm}>Tyhjennä
+                                    </button>
                                 </div>
-                                <button
-                                    className={"button"}
-                                    onClick={this.showModal}>{this.quotaHasValidItems() ? "Muokkaa kiintiöitä" : "Lisää kiintiöitä"}</button>
-                            </div>
-                        </>
-                        }
-                        <div className={"field is-grouped"}>
-                            <button className="button is-link" onClick={this.saveForm}>Jatka</button>
-                            <button className="button is-text" type={"reset"} onClick={this.resetForm}>Tyhjennä</button>
-                        </div>
 
-                    </section>
-                    </div>
+                            </section>
+                        </div>
                     </div>
                 }
                 {this.state.isModalVisible &&
