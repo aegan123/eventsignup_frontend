@@ -6,6 +6,10 @@ import {useRouteError} from "react-router-dom";
 
 export default function ErrorPage() {
     const error = useRouteError();
+    // @ts-ignore
+    const statusText = error.statusText
+    // @ts-ignore
+    const statusMessage = error.message
 
     return (
         <div className="container is-fluid">
@@ -14,7 +18,7 @@ export default function ErrorPage() {
                 <div className="section">
                     <p>Sorry, an unexpected error has occurred.</p>
                     <p>
-                        <i>{error.statusText || error.message}</i>
+                        <i>{statusText || statusMessage}</i>
                     </p>
                 </div>
             </div>
