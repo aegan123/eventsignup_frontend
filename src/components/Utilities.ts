@@ -2,6 +2,8 @@
 Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.
 Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
  */
+import {LocalDateTime, ZoneId} from "@js-joda/core";
+
 export const serverAddress = "http://localhost:8080"
 
 export function postEvent(path: string, data: any): Promise<Response> {
@@ -18,4 +20,8 @@ export function postImageData(path: string, fileToUpload: Blob): Promise<Respons
         body: fileToUpload,
         headers: {"Content-Type": fileToUpload.type},
     })
+}
+
+export function convertLocalDateToUTCISOString(inputDate: string): string {
+    return LocalDateTime.parse(inputDate).atZone(ZoneId.SYSTEM).withZoneSameInstant(ZoneId.UTC).toString()
 }

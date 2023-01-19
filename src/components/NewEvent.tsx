@@ -6,10 +6,8 @@ import {ChangeEvent, Component} from "react";
 import {Event} from "../types/Event";
 import {ReactFormBuilder, ReactFormGenerator} from 'react-form-builder2';
 import 'react-form-builder2/dist/app.css';
-import {postEvent, postImageData} from "./Utilities";
+import {convertLocalDateToUTCISOString, postEvent, postImageData} from "./Utilities";
 import {Quota} from "../types/Quota";
-import {LocalDateTime, ZoneId} from "@js-joda/core";
-
 
 interface NewEventProps {
 }
@@ -98,10 +96,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         this.closeMessage = this.closeMessage.bind(this)
     }
 
-    private cloneInitialState(): any {
-        return JSON.parse(JSON.stringify(this.initialState))
-    }
-
+    // Quota handling related functions
     private formatQuotas(): string {
         let returnValue = ""
         if (this.tempQuotas && this.tempQuotas.length) {
@@ -110,18 +105,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             })
         }
         return returnValue
-    }
-
-    private showModal(): void {
-        this.setState({
-            'isModalVisible': true
-        })
-    }
-
-    private hideModal(): void {
-        this.setState({
-            'isModalVisible': false
-        })
     }
 
     private saveQuotas(): void {
@@ -175,34 +158,32 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         return true
     }
 
-    private resetForm(): void {
-        this.setState(Object.assign(this.cloneInitialState(), {
-            quotas: [],
-            endDate: "",
-            price: "",
-            signupEnds: "",
-            bannerImg: "",
-            minParticipants: "",
-            maxParticipants: "",
-            prettyPrintQuotas: "",
-            selectedFile: null
-        }))
-        this.tempQuotas.length = 0  // see: https://stackoverflow.com/a/1232046
+    private deleteQuotaRow(index: number) {
+        // @ts-ignore
+        const quotaCopy = [...this.state.quotas]
+        quotaCopy.splice(index, 1)
+        this.tempQuotas.splice(index, 1)
+        this.setState({
+            'quotas': quotaCopy,
+            'prettyPrintQuotas': this.formatQuotas()
+        })
+
     }
 
+    // Form saving related functions
     private saveForm(): void {
         this.newEvent = {
             description: this.state.description,
             place: this.state.place,
-            signupStarts: this.convertLocalDateToUTCISOString(this.state.signupStarts),
-            startDate: this.convertLocalDateToUTCISOString(this.state.startDate),
+            signupStarts: convertLocalDateToUTCISOString(this.state.signupStarts),
+            startDate: convertLocalDateToUTCISOString(this.state.startDate),
             name: this.state.name
         }
         if (Object.hasOwn(this.state, "bannerImg")) {
             this.newEvent.bannerImg = this.state.bannerImg
         }
         if (Object.hasOwn(this.state, "endDate") && this.state.endDate !== "") {
-            this.newEvent.endDate = this.convertLocalDateToUTCISOString(this.state.endDate as string)
+            this.newEvent.endDate = convertLocalDateToUTCISOString(this.state.endDate as string)
         }
         if (Object.hasOwn(this.state, "maxParticipants") && this.state.maxParticipants !== "") {
             this.newEvent.maxParticipants = Number(this.state.maxParticipants)
@@ -217,15 +198,11 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             this.newEvent.quotas = this.state.quotas
         }
         if (Object.hasOwn(this.state, "signupEnds") && this.state.signupEnds !== "") {
-            this.newEvent.signupEnds = this.convertLocalDateToUTCISOString(this.state.signupEnds as string)
+            this.newEvent.signupEnds = convertLocalDateToUTCISOString(this.state.signupEnds as string)
         }
         this.setState({
             'isFormBuilderVisible': true
         })
-    }
-
-    private convertLocalDateToUTCISOString(inputDate: string): string {
-        return LocalDateTime.parse(inputDate).atZone(ZoneId.SYSTEM).withZoneSameInstant(ZoneId.UTC).toString()
     }
 
     private handleFormBuilderPost(data: {}) {
@@ -265,14 +242,6 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
             })
     }
 
-    private closeMessage(): void {
-        this.setState({
-            'showError': false,
-            'showSuccess': false,
-            'isFormBuilderVisible': false
-        })
-    }
-
     private async handleImageUpload(file: File) {
         postImageData("/event/banner/add", file)
             .then(async response => {
@@ -306,16 +275,13 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         })
     }
 
-    private deleteQuotaRow(index: number) {
-        // @ts-ignore
-        const quotaCopy = [...this.state.quotas]
-        quotaCopy.splice(index, 1)
-        this.tempQuotas.splice(index, 1)
+    // Form element related functions
+    private closeMessage(): void {
         this.setState({
-            'quotas': quotaCopy,
-            'prettyPrintQuotas': this.formatQuotas()
+            'showError': false,
+            'showSuccess': false,
+            'isFormBuilderVisible': false
         })
-
     }
 
     private handleEndDateStatus(checked: boolean) {
@@ -361,6 +327,38 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     private handleInputChange(event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>): void {
         // @ts-ignore
         this.setState({[event.target.name]: event.target.value})
+    }
+
+    private showModal(): void {
+        this.setState({
+            'isModalVisible': true
+        })
+    }
+
+    private hideModal(): void {
+        this.setState({
+            'isModalVisible': false
+        })
+    }
+
+    // Other functions
+    private cloneInitialState(): any {
+        return JSON.parse(JSON.stringify(this.initialState))
+    }
+
+    private resetForm(): void {
+        this.setState(Object.assign(this.cloneInitialState(), {
+            quotas: [],
+            endDate: "",
+            price: "",
+            signupEnds: "",
+            bannerImg: "",
+            minParticipants: "",
+            maxParticipants: "",
+            prettyPrintQuotas: "",
+            selectedFile: null
+        }))
+        this.tempQuotas.length = 0  // see: https://stackoverflow.com/a/1232046
     }
 
     render() {
