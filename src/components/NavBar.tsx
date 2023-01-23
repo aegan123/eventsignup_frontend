@@ -6,19 +6,19 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 
 interface NavBarProps {
-    showAdminStatus: boolean
-    showLoginStatus: boolean
+    showAdminStatus: boolean,
+    showLoginStatus: boolean,
+    managementIsActive: boolean,
+    showManagement: boolean
 }
 
 const classNameActive = 'navbar-item is-tab is-active';
 const classNameInactive = 'navbar-item is-tab';
 
-export default function NavBar({showAdminStatus, showLoginStatus}: NavBarProps) {
+export default function NavBar({ showAdminStatus, showLoginStatus, managementIsActive, showManagement }: NavBarProps) {
     const [adminIsActive, setAdminIsActive] = useState(false)
-    const [myEventsIsActive, setMyEventsIsActive] = useState(false)
+    const [myEventsIsActive, setMyEventsIsActive] = useState(managementIsActive)
     const [newEventIsActive, setNewEventIsActive] = useState(false)
-    const [showManagement, setShowManagement] = useState(!showLoginStatus)
-    const [showLogin, setShowLogin] = useState(showLoginStatus)
 
     function toggleMyEventIsActiveState(): void {
         setMyEventsIsActive(true)
@@ -36,11 +36,6 @@ export default function NavBar({showAdminStatus, showLoginStatus}: NavBarProps) 
         setMyEventsIsActive(false)
         setNewEventIsActive(false)
         setAdminIsActive(true)
-    }
-
-    function toggleShowLoginButtonState(): void {
-        setShowManagement(false)
-        setShowLogin(true)
     }
 
     return (
@@ -95,7 +90,7 @@ export default function NavBar({showAdminStatus, showLoginStatus}: NavBarProps) 
                     }
                 </div>
                 <div className="navbar-end">
-                    {showLogin &&
+                    {showLoginStatus &&
                         <div className={classNameActive}>
                             <Link to={'login'}>
                                    <span className="icon is-small"><i className="fas fa-sign-in-alt"></i>
@@ -104,8 +99,8 @@ export default function NavBar({showAdminStatus, showLoginStatus}: NavBarProps) 
                             </Link>
                         </div>
                     }
-                    {!showLogin &&
-                        <div className="navbar-item" onClick={toggleShowLoginButtonState}>
+                    {!showLoginStatus &&
+                        <div className="navbar-item">
                             <Link to={'logout'}>
                                     <span className="icon is-small"><i
                                         className="fas fa-sign-out-alt" aria-hidden="true"></i>

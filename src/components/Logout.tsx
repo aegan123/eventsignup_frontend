@@ -1,7 +1,15 @@
+import {useEffect} from "react";
+import {logout} from "./Utilities";
+
 export default function Logout() {
+
+    useEffect(() => {
+        logout()
+        window.location.replace("/")
+    })
     return (
-        <>
-            Logout page
-        </>
+        <div className={"content"}>
+            <p>Olet kirjautunut ulos.</p>
+        </div>
     )
 }

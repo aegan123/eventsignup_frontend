@@ -2,9 +2,11 @@
 Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.
 Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
  */
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import {Outlet} from "react-router-dom";
 import Navbar from "../components/NavBar";
+import {useLocalState, validateToken} from "../components/Utilities";
+import {LOCAL_STORAGE_KEY_IS_ADMIN, LOCAL_STORAGE_KEY_JWT} from "../constants";
 
 // Source: Bulma css documentation
 function toggleNavBurgerEvents() {
@@ -29,23 +31,38 @@ function toggleNavBurgerEvents() {
 }
 
 export default function Root() {
-    function getLoginStatus() {
-        // TODO check auth cookie and set value
-        return false
+
+    const [isLoggedIn, setIsLoggedIn] = useLocalState("", LOCAL_STORAGE_KEY_JWT)
+    const [isAdmin, setIsAdmin] = useLocalState("", LOCAL_STORAGE_KEY_IS_ADMIN)
+
+    function logTheUserOut() {
+        setIsLoggedIn("")
+        setIsAdmin("")
+        const pathName = window.location.pathname
+        if (pathName !== "/login" && pathName !== "/" && !pathName.includes("signup")) {
+            window.location.replace("/login")
+        }
     }
 
-    function getAdminStatus() {
-        // TODO check if logged in user is admin
-        return true
-    }
-    const showLogin = getLoginStatus()
-    const showAdmin = getAdminStatus()
+    useEffect(() => {
+        if (!validateToken()) {
+            logTheUserOut()
+        }
+        // Continuously check whether JWT has expired and log the user out if it has.
+        const interval = setInterval(() => {
+            if (!validateToken()) {
+                // TODO somehow inform the user that the session has expired and they have been logged out
+                logTheUserOut()
+            }
+        }, 60000);
+        return () => clearInterval(interval);
+    });
 
     document.addEventListener('DOMContentLoaded', toggleNavBurgerEvents);
 
     return (
         <>
-            <Navbar showAdminStatus={showAdmin} showLoginStatus={showLogin}/>
+            <Navbar showAdminStatus={isAdmin} showLoginStatus={!isLoggedIn} showManagement={isLoggedIn} managementIsActive={isLoggedIn}/>
             <div className="columns is-gapless is-8">
                 {/* left column */}
                 <div className="column is-desktop">
