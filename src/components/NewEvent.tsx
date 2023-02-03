@@ -213,7 +213,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
         if (typeof this.newEvent !== "undefined") {
             this.newEvent.form = {'formData': this.formBuilderData}
         }
-        postEvent("/event/create", this.newEvent)
+        postEvent("/api/event/create", this.newEvent)
             .then(response => {
                 if (response.ok) {
                     this.setState({
@@ -243,7 +243,7 @@ export default class NewEvent extends Component<NewEventProps, NewEventState> {
     }
 
     private async handleImageUpload(file: File) {
-        postImageData("/event/banner/add", file)
+        postImageData("/api/event/banner/add", file)
             .then(async response => {
                 if (response.ok) {
                     const responseJson = await response.json()
