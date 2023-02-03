@@ -4,7 +4,8 @@ Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
  */
 import {Event} from "../types/Event";
 import {SERVER_ADDRESS} from "../constants";
-import {ReactFormGenerator} from 'react-form-builder2';
+import {FormGeneratorOnSubmitParams, ReactFormGenerator} from 'react-form-builder2';
+import {convertUTCIsoStringToLocalDateTimeString} from "./Utilities";
 
 
 interface EventProps {
@@ -13,9 +14,8 @@ interface EventProps {
 
 export function EventComponent({event}: EventProps) {
 
-    function handleSignup(): void {
-        console.log("in handleSignup")
-
+    function handleSignup(event: FormGeneratorOnSubmitParams[]): void {
+        console.log(event)
     }
 
     return (
@@ -23,9 +23,8 @@ export function EventComponent({event}: EventProps) {
             <section className={"section"}>
                 <h1 className={"title"}>{event.name}</h1>
                 {event.bannerImg &&
-                    // FIXME set pic size relative to page (column) size
                     <figure className={"image"}>
-                        <img className={"has-ratio"} src={`${SERVER_ADDRESS}/event/banner/get/${event.bannerImg}`}
+                        <img className={"has-ratio"} src={`${SERVER_ADDRESS}/api/event/banner/get/${event.bannerImg}`}
                              alt={"Tapahtuman kansikuva"}/>
                     </figure>
                 }
@@ -36,13 +35,12 @@ export function EventComponent({event}: EventProps) {
                     Paikka: {event.place}
                 </div>
                 {(event.startDate && event.endDate) ?
-                    // FIXME convert to localDate and format properly
                     <div className={"block"}>
-                        Tapahtuman aika: {event.startDate} - {event.endDate}
+                        Tapahtuman aika: {convertUTCIsoStringToLocalDateTimeString(event.startDate)} - {convertUTCIsoStringToLocalDateTimeString(event.endDate)}
                     </div>
                     :
                     <div className={"block"}>
-                        Tapahtuman aika: {event.startDate}
+                        Tapahtuman aika: {convertUTCIsoStringToLocalDateTimeString(event.startDate)}
                     </div>
                 }
                 {event.price &&
@@ -54,11 +52,10 @@ export function EventComponent({event}: EventProps) {
                     <ReactFormGenerator
                         form_action={""}
                         form_method={"POST"}
-                        data={event.form.formData}
+                        data={event.form.formData.task_data}
                         action_name={"Ilmoittaudu"}
                         back_name={"Peruuta"}
-                        onSubmit={handleSignup}
-                        read_only={true}
+                        onSubmit={(event) => handleSignup(event)}
                     />
                 </div>
             </section>

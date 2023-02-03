@@ -13,11 +13,16 @@ export default function EventSignup() {
     const [showError, setShowError] = useState(false)
     const [errorMsg, setErrorMsg] = useState("")
 
-    useEffect(() => {
+    function getEventIdFromPath(): string {
         const pathname = window.location.pathname
-        // FIXME won't work if path has a trailing /
-        const idFromPath = pathname.substring(pathname.lastIndexOf("/") + 1)
-        get(`/signup/${idFromPath}`)
+        const splitPath = pathname.split("/").filter(n => n)
+
+        return splitPath[1]
+    }
+
+    useEffect(() => {
+        const idFromPath = getEventIdFromPath()
+        get(`/api/signup/${idFromPath}`)
             .then(async response => {
                 if (response.ok) {
                     return Promise.all([await response.json(), await response.headers])
@@ -29,12 +34,13 @@ export default function EventSignup() {
             .then(([body, headers]) => {
                 setEvent(body)
                 setShowEvent(true)
+                setShowError(false)
             })
             .catch(error => {
-                setErrorMsg(error)
+                setErrorMsg(error.message)
                 setShowError(true)
             })
-    }, [event, errorMsg])
+    }, [event])
 
     return (
         <>
