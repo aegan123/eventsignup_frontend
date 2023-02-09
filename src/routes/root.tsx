@@ -2,7 +2,7 @@
 Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.
 Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
  */
-import React, { useState } from 'react'
+import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Navbar from '../components/NavBar'
 
@@ -15,11 +15,11 @@ function toggleNavBurgerEvents() {
   )
 
   // Add a click event on each of them
-  $navbarBurgers.forEach((el) => {
+  $navbarBurgers.forEach((el: HTMLElement) => {
     el.addEventListener('click', () => {
       // Get the target from the "data-target" attribute
       const target = el.dataset.target
-      const $target = document.getElementById(target)
+      const $target = target ? document.getElementById(target) : null
 
       // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
       el.classList.toggle('is-active')
