@@ -4,29 +4,21 @@
   "private": true,
   "main": "sass/eventsignupstyles.scss",
   "dependencies": {
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.68",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.8.4"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "css-build": "node-sass --omit-source-map-url sass/eventsignupstyles.scss public/eventsignup.css",
-    "css-watch": "npm run css-build -- --watch"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "css-build": "sass --no-source-map sass/eventsignupstyles.scss public/eventsignup.css",
+    "css-watch": "npm run css-build -- --watch",
+    "check-types": "tsc --project tsconfig.json --noEmit",
+    "check-formatting": "npx prettier --check .",
+    "lint": "npx eslint ."
   },
   "browserslist": {
     "production": [
@@ -41,7 +33,17 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.68",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
     "bulma": "^0.9.4",
-    "node-sass": "^7.0.3"
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "2.8.4",
+    "sass": "^1.58.0",
+    "typescript": "^4.9.5"
   }
 }

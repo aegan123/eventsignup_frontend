@@ -1,4 +1,5 @@
 # Eventsignup Frontend
+
 Copyright Juhani Vähä-Mäkilä (juhani@fmail.co.uk) 2022.\
 Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
 
@@ -12,6 +13,7 @@ Licenced under EUROPEAN UNION PUBLIC LICENCE v. 1.2.
 - FontAwesome icons
 
 ## Development
+
 Highly recommended IDE is JetBrains WebStorm.
 
 CSS file can be generated with this command:\

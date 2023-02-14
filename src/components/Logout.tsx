@@ -1,7 +1,3 @@
 export default function Logout() {
-    return (
-        <>
-            Logout page
-        </>
-    )
+  return <>Logout page</>
 }
