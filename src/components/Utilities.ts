@@ -30,7 +30,8 @@ export function login(username: string, password: string): Promise<Response> {
     return fetch(`${SERVER_ADDRESS}/api/auth/authenticate`, {
         method: HTTP_METHOD_POST,
         body: JSON.stringify(requestBody),
-        headers: BASE_HTTP_HEADER
+        headers: BASE_HTTP_HEADER,
+        credentials: "include"
     })
 }
 
@@ -42,7 +43,7 @@ export function logout(): void {
 export function useLocalState(defaultValue: string, key: string) {
     const [value, setValue] = useState(() => {
         const localStorageValue = localStorage.getItem(key)
-        return localStorageValue !== null ? JSON.parse(localStorageValue) : defaultValue
+        return localStorageValue !== undefined && localStorageValue !== null ? JSON.parse(localStorageValue) : defaultValue
     })
     useEffect(() => {
         localStorage.setItem(key, JSON.stringify(value))
