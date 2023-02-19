@@ -32,6 +32,8 @@ CSS file can be generated with this command:\
 
 There are also scripts to ensure code quality and consistency. They are run automatically on pull requests, but you can also run them by hand. If you want to autoformat all files, you can run `npx prettier --write .`
 
+When developing components, you can use storybook, where you can develop them in isolation and reach states that are not pleasantly reached otherwise. Also, when project grows, all developers can find and browse all implemented components easily. You can start storybook by running `npm run storybook`.
+
 Features/bug fixes are to be developed in their own branches.
 
 ## React Scripts
