@@ -7,22 +7,10 @@ import { Outlet } from 'react-router-dom'
 import { HeaderComponent } from '../components/HeaderComponent'
 
 export default function Root() {
-  function getLoginStatus() {
-    // TODO check auth cookie and set value
-    return false
-  }
-
-  function getAdminStatus() {
-    // TODO check if logged in user is admin
-    return true
-  }
-  const showLogin = getLoginStatus()
-  const showAdmin = getAdminStatus()
-
   return (
     <div>
       <div>
-        <HeaderComponent showLogin={showLogin} showAdmin={showAdmin} />
+        <HeaderComponent loggedIn={true} isAdmin={true} />
         <div className="container">
           <Outlet />
         </div>

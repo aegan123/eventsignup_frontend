@@ -15,6 +15,8 @@ import NewEvent from './components/NewEvent'
 import Logout from './components/Logout'
 import IndexRoute from './components/IndexRoute'
 
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 const router = createBrowserRouter([
   {
     path: '/',

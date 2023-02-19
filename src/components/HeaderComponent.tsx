@@ -7,11 +7,11 @@ import styled from 'styled-components'
 import asteriskiLogo from '../assets/asteriski-logo.png'
 
 const HeaderComponent = ({
-  showLogin,
-  showAdmin,
+  loggedIn,
+  isAdmin,
 }: {
-  showLogin: boolean
-  showAdmin: boolean
+  loggedIn: boolean
+  isAdmin: boolean
 }) => {
   return (
     <StyledHeaderContainer className="header-container">
@@ -29,19 +29,21 @@ const HeaderComponent = ({
           </Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse className="justify-content-center">
-          <Nav>
-            <Link href="/management" label="Omat tapahtumat" />
-            <Link href="/newEvent" label="Luo uusi tapahtuma" />'
-          </Nav>
-        </Navbar.Collapse>
+        {loggedIn && (
+          <Navbar.Collapse className="justify-content-center">
+            <Nav>
+              <Link href="/management" label="Omat tapahtumat" />
+              <Link href="/newEvent" label="Luo uusi tapahtuma" />
+            </Nav>
+          </Navbar.Collapse>
+        )}
         <Navbar.Collapse className="justify-content-end">
           <Nav>
-            {showAdmin && <Link href="/admin" label="Admin" />}
-            {showLogin ? (
-              <Link href="/login" label="Kirjaudu sisään" />
-            ) : (
+            {loggedIn && isAdmin && <Link href="/admin" label="Admin" />}
+            {loggedIn ? (
               <Link href="/logout" label="Kirjaudu ulos" />
+            ) : (
+              <Link href="/login" label="Kirjaudu sisään" />
             )}
           </Nav>
         </Navbar.Collapse>
