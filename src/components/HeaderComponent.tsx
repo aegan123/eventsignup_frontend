@@ -1,11 +1,10 @@
 import React from 'react'
 import { Navbar } from 'react-bootstrap'
 import { Nav } from 'react-bootstrap'
-
-import './headerComponent.css'
+import { LinkContainer } from 'react-router-bootstrap'
+import styled from 'styled-components'
 
 import asteriskiLogo from '../assets/asteriski-logo.png'
-import '../assets/rotating-logo.css'
 
 const HeaderComponent = ({
   showLogin,
@@ -15,38 +14,87 @@ const HeaderComponent = ({
   showAdmin: boolean
 }) => {
   return (
-    <div className="header-container">
-      <Navbar variant="dark" expand="md">
-        <Navbar.Brand href="/">
-          <img
-            alt="navbar-brand"
-            width="32"
-            height="32"
-            className="d-inline-block align-top rotating-logo"
-            src={asteriskiLogo}
-          />{' '}
-          Ilmoittautumisjärjestelmä
-        </Navbar.Brand>
+    <StyledHeaderContainer className="header-container">
+      <StyledNavbar variant="dark" expand="md">
+        <LinkContainer to="/">
+          <Navbar.Brand>
+            <RotatingLogo
+              alt="navbar-brand"
+              width="32"
+              height="32"
+              className="d-inline-block align-top"
+              src={asteriskiLogo}
+            />{' '}
+            Ilmoittautumisjärjestelmä
+          </Navbar.Brand>
+        </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse className="justify-content-center">
           <Nav>
-            <Nav.Link href="/management">Omat tapahtumat</Nav.Link>
-            <Nav.Link href="/newEvent">Luo uusi tapahtuma</Nav.Link>
+            <Link href="/management" label="Omat tapahtumat" />
+            <Link href="/newEvent" label="Luo uusi tapahtuma" />'
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
           <Nav>
-            {showAdmin && <Nav.Link href="/admin">Admin</Nav.Link>}
+            {showAdmin && <Link href="/admin" label="Admin" />}
             {showLogin ? (
-              <Nav.Link href="/login">Kirjaudu sisään</Nav.Link>
+              <Link href="/login" label="Kirjaudu sisään" />
             ) : (
-              <Nav.Link href="/logout">Kirjaudu ulos</Nav.Link>
+              <Link href="/logout" label="Kirjaudu ulos" />
             )}
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
-    </div>
+      </StyledNavbar>
+    </StyledHeaderContainer>
   )
 }
+
+const Link = ({ href, label }: { href: string; label: string }) => (
+  <LinkContainer to={href}>
+    <StyledLink>{label}</StyledLink>
+  </LinkContainer>
+)
+
+const RotatingLogo = styled.img`
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+
+  &:hover,
+  &:focus,
+  &:active {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+`
+
+const StyledHeaderContainer = styled.div`
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 15px;
+`
+
+const StyledNavbar = styled(Navbar)`
+  background-color: #2b8c49;
+  box-shadow: 0 0 0.7em #8e8d8d;
+`
+
+const StyledLink = styled(Nav.Link)`
+  color: #fff !important;
+  &:hover {
+    color: #d6d6d6 !important;
+    transition: all 0.3s ease-in-out;
+    transition-delay: 0s;
+    transition-duration: 0.3s;
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+  }
+`
 
 export { HeaderComponent }
