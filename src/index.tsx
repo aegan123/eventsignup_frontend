@@ -14,6 +14,7 @@ import AdminPage from './components/AdminPage'
 import NewEvent from './components/NewEvent'
 import Logout from './components/Logout'
 import IndexRoute from './components/IndexRoute'
+import './index.css'
 
 const router = createBrowserRouter([
   {
