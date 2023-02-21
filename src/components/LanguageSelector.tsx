@@ -11,7 +11,6 @@ import '/node_modules/flag-icons/css/flag-icons.min.css'
 const LanguageSelector = (): React.ReactElement => {
   const { i18n } = useTranslation()
   const currentLanguage = i18n.language as 'en' | 'fi'
-  console.log(currentLanguage)
 
   const langToIcon = {
     en: 'us',
