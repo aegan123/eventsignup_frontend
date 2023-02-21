@@ -2,6 +2,7 @@ import React from 'react'
 import { Navbar } from 'react-bootstrap'
 import { Nav } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import { LanguageSelector } from './LanguageSelector'
 import styled from 'styled-components'
 
 import asteriskiLogo from '../assets/asteriski-logo.png'
@@ -40,6 +41,9 @@ const HeaderComponent = ({
         <Navbar.Collapse className="justify-content-end">
           <Nav>
             {loggedIn && isAdmin && <Link href="/admin" label="Admin" />}
+            <Nav.Item>
+              <LanguageSelector />
+            </Nav.Item>
             {loggedIn ? (
               <Link href="/logout" label="Kirjaudu ulos" />
             ) : (
@@ -53,9 +57,11 @@ const HeaderComponent = ({
 }
 
 const Link = ({ href, label }: { href: string; label: string }) => (
-  <LinkContainer to={href}>
-    <StyledLink>{label}</StyledLink>
-  </LinkContainer>
+  <Nav.Item>
+    <LinkContainer to={href}>
+      <StyledLink>{label}</StyledLink>
+    </LinkContainer>
+  </Nav.Item>
 )
 
 const RotatingLogo = styled.img`
