@@ -1,11 +1,17 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import Dropdown from 'react-bootstrap/Dropdown'
+import NavItem from 'react-bootstrap/NavItem'
+import NavLink from 'react-bootstrap/NavLink'
+import Nav from 'react-bootstrap/Nav'
+
 import styled from 'styled-components'
 import '/node_modules/flag-icons/css/flag-icons.min.css'
 
 const LanguageSelector = (): React.ReactElement => {
   const { i18n } = useTranslation()
   const currentLanguage = i18n.language as 'en' | 'fi'
+  console.log(currentLanguage)
 
   const langToIcon = {
     en: 'us',
@@ -13,30 +19,31 @@ const LanguageSelector = (): React.ReactElement => {
   }
 
   return (
-    <Wrapper>
-      <span className={`fi fi-${langToIcon[currentLanguage]} fis`}></span>
-      <Dropdown>
-        <p onClick={() => void i18n.changeLanguage('fi')}>
+    <Dropdown as={NavItem}>
+      <Dropdown.Toggle as={NavLink}>
+        <span
+          className={`fi fi-${langToIcon[currentLanguage] || 'fi'} fis`}
+        ></span>
+      </Dropdown.Toggle>
+      <DropdownMenu variant="dark">
+        <Dropdown.Item
+          as={Nav.Item}
+          onClick={() => void i18n.changeLanguage('fi')}
+        >
           <span className={`fi fi-fi fis`}></span>
-        </p>
-        <p onClick={() => void i18n.changeLanguage('en')}>
+        </Dropdown.Item>
+        <Dropdown.Item
+          as={Nav.Item}
+          onClick={() => void i18n.changeLanguage('en')}
+        >
           <span className={`fi fi-us fis`}></span>
-        </p>
-      </Dropdown>
-    </Wrapper>
+        </Dropdown.Item>
+      </DropdownMenu>
+    </Dropdown>
   )
 }
 
-const Dropdown = styled.div`
-  display: none;
-  position: absolute;
-  width: 200px;
+const DropdownMenu = styled(Dropdown.Menu)`
+  min-width: 0;
 `
-
-const Wrapper = styled.div`
-  &:hover ${Dropdown} {
-    display: block;
-  }
-`
-
 export { LanguageSelector }
