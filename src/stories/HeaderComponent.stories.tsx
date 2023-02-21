@@ -3,7 +3,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { withRouter } from 'storybook-addon-react-router-v6'
 
 import { HeaderComponent } from '../components/HeaderComponent'
+
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '../translations/i18n'
 
 export default {
   title: 'Header',

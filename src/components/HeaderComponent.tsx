@@ -4,6 +4,7 @@ import { Nav } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { LanguageSelector } from './LanguageSelector'
 import styled from 'styled-components'
+import { translate } from '../translations'
 
 import asteriskiLogo from '../assets/asteriski-logo.png'
 
@@ -26,28 +27,30 @@ const HeaderComponent = ({
               className="d-inline-block align-top"
               src={asteriskiLogo}
             />{' '}
-            Ilmoittautumisjärjestelmä
+            {translate('header.title')}
           </Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         {loggedIn && (
           <Navbar.Collapse className="justify-content-center">
             <Nav>
-              <Link href="/management" label="Omat tapahtumat" />
-              <Link href="/newEvent" label="Luo uusi tapahtuma" />
+              <Link href="/management" label={translate('header.ownEvents')} />
+              <Link href="/newEvent" label={translate('header.newEvent')} />
             </Nav>
           </Navbar.Collapse>
         )}
         <Navbar.Collapse className="justify-content-end">
           <Nav>
-            {loggedIn && isAdmin && <Link href="/admin" label="Admin" />}
+            {loggedIn && isAdmin && (
+              <Link href="/admin" label={translate('header.admin')} />
+            )}
             <Nav.Item>
               <LanguageSelector />
             </Nav.Item>
             {loggedIn ? (
-              <Link href="/logout" label="Kirjaudu ulos" />
+              <Link href="/logout" label={translate('header.logout')} />
             ) : (
-              <Link href="/login" label="Kirjaudu sisään" />
+              <Link href="/login" label={translate('header.login')} />
             )}
           </Nav>
         </Navbar.Collapse>
