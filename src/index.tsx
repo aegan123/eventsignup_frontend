@@ -14,6 +14,7 @@ import AdminPage from './components/AdminPage'
 import NewEvent from './components/NewEvent'
 import Logout from './components/Logout'
 import IndexRoute from './components/IndexRoute'
+import { init } from './auth/keycloak'
 
 import './translations/i18n'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -57,8 +58,10 @@ const router = createBrowserRouter([
 ])
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+void init(() =>
+  root.render(
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  )
 )

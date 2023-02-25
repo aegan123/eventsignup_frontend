@@ -5,7 +5,9 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { LanguageSelector } from './LanguageSelector'
 import styled from 'styled-components'
 import { translate } from '../translations'
-
+import { useTranslation } from 'react-i18next'
+import { RotatingLogo } from '../assets/assets'
+import { keycloak } from '../auth/keycloak'
 import asteriskiLogo from '../assets/asteriski-logo.png'
 
 const HeaderComponent = ({
@@ -15,6 +17,7 @@ const HeaderComponent = ({
   loggedIn: boolean
   isAdmin: boolean
 }) => {
+  const { i18n } = useTranslation()
   return (
     <StyledHeaderContainer className="header-container">
       <StyledNavbar variant="dark" expand="md">
@@ -47,11 +50,19 @@ const HeaderComponent = ({
             <Nav.Item>
               <LanguageSelector />
             </Nav.Item>
-            {loggedIn ? (
-              <Link href="/logout" label={translate('header.logout')} />
-            ) : (
-              <Link href="/login" label={translate('header.login')} />
-            )}
+            <Nav.Item>
+              {loggedIn ? (
+                <StyledLink href={keycloak?.createLogoutUrl()}>
+                  {translate('header.logout')}
+                </StyledLink>
+              ) : (
+                <StyledLink
+                  href={keycloak?.createLoginUrl({ locale: i18n.language })}
+                >
+                  {translate('header.login')}
+                </StyledLink>
+              )}
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </StyledNavbar>
@@ -66,25 +77,6 @@ const Link = ({ href, label }: { href: string; label: string }) => (
     </LinkContainer>
   </Nav.Item>
 )
-
-const RotatingLogo = styled.img`
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-
-  &:hover,
-  &:focus,
-  &:active {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-  }
-`
 
 const StyledHeaderContainer = styled.div`
   font-family: 'Poppins', sans-serif;
