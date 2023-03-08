@@ -1,7 +1,9 @@
 import Keycloak from 'keycloak-js'
 
+const KEYCLOAK_URL = process.env.REACT_APP_KEYCLOAK_URL
+
 const keycloak = new Keycloak({
-  url: 'http://localhost:9090',
+  url: KEYCLOAK_URL,
   realm: 'asteriski',
   clientId: 'eventsignup_frontend',
 })
