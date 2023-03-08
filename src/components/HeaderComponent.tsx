@@ -52,12 +52,16 @@ const HeaderComponent = ({
             </Nav.Item>
             <Nav.Item>
               {loggedIn ? (
-                <StyledLink href={keycloak?.createLogoutUrl()}>
+                <StyledLink
+                  href={keycloak?.createLogoutUrl()}
+                  data-cypress="logout"
+                >
                   {translate('header.logout')}
                 </StyledLink>
               ) : (
                 <StyledLink
                   href={keycloak?.createLoginUrl({ locale: i18n.language })}
+                  data-cypress="login"
                 >
                   {translate('header.login')}
                 </StyledLink>

@@ -29,7 +29,9 @@
     "check-formatting": "npx prettier --check .",
     "lint": "npx eslint .",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "cypress:open": "npx cypress open",
+    "cypress:ci": "npx cypress run"
   },
   "browserslist": {
     "production": [
@@ -64,6 +66,7 @@
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "bulma": "^0.9.4",
+    "cypress": "^12.7.0",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-storybook": "^0.6.10",
