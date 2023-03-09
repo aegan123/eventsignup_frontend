@@ -8,7 +8,10 @@ on:
 jobs:
   integration-tests:
     runs-on: ubuntu-latest
-    container: cypress/browsers:node18.12.0-chrome106-ff106
+    container:
+      image: cypress/browsers:node18.12.0-chrome107
+      env:
+        REACT_APP_KEYCLOAK_URL: http://keycloak:8080
 
     services:
       keycloak:
@@ -16,8 +19,6 @@ jobs:
         credentials:
           username: ${{ secrets.gh_user }}
           password: ${{ secrets.gh_token }}
-        ports:
-          - 9090:8080
 
     steps:
       - uses: actions/checkout@v3
@@ -25,10 +26,16 @@ jobs:
       - name: Authenticate to github packages
         run: echo '//npm.pkg.github.com/:_authToken=${{ secrets.gh_token }}' > ~/.npmrc
 
-      - name: Cypress run
+      - name: Run cypress tests
         uses: cypress-io/github-action@v5
         with:
-          env: REACT_APP_KEYCLOAK_URL=http://keycloak:9090
           browser: chrome
           start: npm start
           wait-on: 'http://localhost:3000'
+          env: KEYCLOAK_URL=http://keycloak:8080
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
