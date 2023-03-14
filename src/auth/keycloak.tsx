@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Keycloak from 'keycloak-js'
+import { axiosInstance } from './client'
+import { AxiosRequestHeaders } from 'axios'
 
 const KeycloakContext = React.createContext<Keycloak | undefined>(undefined)
 
@@ -17,6 +19,16 @@ const KeycloakProvider = ({ children }: { children: React.ReactNode }) => {
         .then(() => {
           console.log('kc init ok')
           setKc(keycloak)
+          axiosInstance.interceptors.request.use((req) => {
+            if (keycloak.token) {
+              req.headers = {
+                ...req.headers,
+                Authorization: `Bearer ${keycloak.token}`,
+              } as AxiosRequestHeaders
+            }
+
+            return req
+          })
         })
         .catch((e) => console.error(e)),
     []
