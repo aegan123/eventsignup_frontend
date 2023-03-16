@@ -38,8 +38,12 @@ const HeaderComponent = ({
         {loggedIn && (
           <Navbar.Collapse className="justify-content-center">
             <Nav>
-              <Link href="/management" label={t('header.ownEvents')} />
-              <Link href="/newEvent" label={t('header.newEvent')} />
+              <Nav.Item>
+                <Link href="/management" label={t('header.ownEvents')} />
+              </Nav.Item>
+              <Nav.Item data-cypress="create-new-event">
+                <Link href="/newEvent" label={t('header.newEvent')} />
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
         )}

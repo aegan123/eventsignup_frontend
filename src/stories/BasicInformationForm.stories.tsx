@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { BasicInformationForm } from '../components/BasicInformationForm'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../translations/i18n'
+import { EventBasicInformation } from '../types/types'
 
 export default {
   title: 'BasicInformationForm',
@@ -14,10 +15,12 @@ export default {
   },
 } as ComponentMeta<typeof BasicInformationForm>
 
-const Template: ComponentStory<typeof BasicInformationForm> = () => (
+const Template: ComponentStory<typeof BasicInformationForm> = (args) => (
   <div className="container">
-    <BasicInformationForm onSubmit={(e) => console.log(e)} />
+    <BasicInformationForm {...args} />
   </div>
 )
 
-export const Form = Template.bind({})
+export const Form = Template.bind({
+  onSubmit: (data: EventBasicInformation) => console.log(data),
+})

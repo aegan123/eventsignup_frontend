@@ -27,6 +27,7 @@ const FormBuilder = ({
             }
           }}
           disabled={data === null}
+          data-cypress="event-save-form-button"
         >
           Tallenna
         </Button>

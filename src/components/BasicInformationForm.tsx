@@ -5,8 +5,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { QuotaModal } from './QuotaModal'
 import { EventBasicInformation } from '../types/types'
+import { axiosInstance } from '../auth/client'
 import '../assets/styles.css'
-
 export const BasicInformationForm = ({
   onSubmit,
 }: {
@@ -24,7 +24,7 @@ export const BasicInformationForm = ({
   const [endDate, setEndDate] = useState<Date>()
   const [signupStarts, setSignupStarts] = useState<Date>()
   const [signupEnds, setSignupEnds] = useState<Date>()
-  const [image, setImage] = useState<File | null>(null)
+  const [image, setImage] = useState<string | null>(null)
   const [maxParticipants, setMaxParticipants] = useState('')
   const [hasParticipantLimit, setHasParticipantLimit] = useState(false)
   const [hasQuotas, setHasQuotas] = useState(false)
@@ -41,11 +41,11 @@ export const BasicInformationForm = ({
         place,
         description,
         price: Number(price) || undefined,
-        startDate: parseDate(startDate) || '',
-        endDate: parseDate(endDate),
-        signupStarts: parseDate(signupStarts),
-        signupEnds: parseDate(signupEnds),
-        bannerImg: image?.name || undefined,
+        startDate: startDate?.toISOString() || '',
+        endDate: endDate?.toISOString() || '',
+        signupStarts: signupStarts?.toISOString() || '',
+        signupEnds: signupEnds?.toISOString() || '',
+        bannerImg: image || undefined,
         minParticipants: 0,
         maxParticipants: Number(maxParticipants) || undefined,
       })
@@ -62,6 +62,7 @@ export const BasicInformationForm = ({
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          data-cypress="event-name"
         />
       </Form.Group>
 
@@ -72,6 +73,7 @@ export const BasicInformationForm = ({
           type="text"
           value={place}
           onChange={(e) => setPlace(e.target.value)}
+          data-cypress="event-place"
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -82,6 +84,7 @@ export const BasicInformationForm = ({
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          data-cypress="event-description"
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -94,6 +97,7 @@ export const BasicInformationForm = ({
             console.log(e)
             setPrice(e.target.value)
           }}
+          data-cypress="event-price"
         />
       </Form.Group>
       <Form.Group className="mb-3">
@@ -112,6 +116,7 @@ export const BasicInformationForm = ({
               showTimeSelect
               timeFormat="HH:mm"
               dateFormat="dd.M.yyyy HH:mm"
+              className="event-startDate"
             />
           </Col>
           <Col md={6}>
@@ -170,7 +175,20 @@ export const BasicInformationForm = ({
         <Form.Control
           type="file"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files) setImage(e.target.files[0])
+            if (e.target.files) {
+              const image = e.target.files[0]
+
+              axiosInstance<{ fileName: string }>({
+                // could get from generated types if not Map type
+                method: 'post',
+                url: '/event/banner/add',
+                data: image,
+                headers: { 'Content-Type': image.type },
+              })
+                .then((res) => res.data)
+                .then(({ fileName }) => setImage(fileName))
+                .catch((error) => console.log('error', error))
+            }
           }}
         />
       </Form.Group>
@@ -235,14 +253,13 @@ export const BasicInformationForm = ({
         </Row>
       </Form.Group>
 
-      <Button variant="primary" type="submit" style={{ marginRight: '10px' }}>
-        Jatka
-      </Button>
-      <Button variant="secondary" onClick={(e) => e}>
-        Tyhjennä
+      <Button
+        variant="primary"
+        type="submit"
+        data-cypress="event-save-basic-button"
+      >
+        Tallenna
       </Button>
     </Form>
   )
 }
-
-const parseDate = (date?: Date) => date?.toDateString() || undefined
