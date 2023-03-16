@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Navbar } from 'react-bootstrap'
 import { Nav } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { LanguageSelector } from './LanguageSelector'
 import styled from 'styled-components'
-import { translate } from '../translations'
-
+import { useTranslation } from 'react-i18next'
+import { RotatingLogo } from '../assets/assets'
 import asteriskiLogo from '../assets/asteriski-logo.png'
+import { KeycloakContext } from '../auth/keycloak'
 
 const HeaderComponent = ({
   loggedIn,
@@ -15,6 +16,9 @@ const HeaderComponent = ({
   loggedIn: boolean
   isAdmin: boolean
 }) => {
+  const { t, i18n } = useTranslation()
+  const keycloak = useContext(KeycloakContext)
+
   return (
     <StyledHeaderContainer className="header-container">
       <StyledNavbar variant="dark" expand="md">
@@ -27,31 +31,44 @@ const HeaderComponent = ({
               className="d-inline-block align-top"
               src={asteriskiLogo}
             />{' '}
-            {translate('header.title')}
+            {t('header.title')}
           </Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         {loggedIn && (
           <Navbar.Collapse className="justify-content-center">
             <Nav>
-              <Link href="/management" label={translate('header.ownEvents')} />
-              <Link href="/newEvent" label={translate('header.newEvent')} />
+              <Link href="/management" label={t('header.ownEvents')} />
+              <Link href="/newEvent" label={t('header.newEvent')} />
             </Nav>
           </Navbar.Collapse>
         )}
         <Navbar.Collapse className="justify-content-end">
           <Nav>
             {loggedIn && isAdmin && (
-              <Link href="/admin" label={translate('header.admin')} />
+              <Link href="/admin" label={t('header.admin')} />
             )}
             <Nav.Item>
               <LanguageSelector />
             </Nav.Item>
-            {loggedIn ? (
-              <Link href="/logout" label={translate('header.logout')} />
-            ) : (
-              <Link href="/login" label={translate('header.login')} />
-            )}
+            <Nav.Item>
+              {loggedIn ? (
+                <StyledLink
+                  href={keycloak?.createLogoutUrl()}
+                  data-cypress="logout"
+                >
+                  {t('header.logout')}
+                </StyledLink>
+              ) : (
+                <StyledLink
+                  href={keycloak?.createLoginUrl({ locale: i18n.language })}
+                  data-cypress="login"
+                  disabled={!keycloak}
+                >
+                  {t('header.login')}
+                </StyledLink>
+              )}
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </StyledNavbar>
@@ -67,25 +84,6 @@ const Link = ({ href, label }: { href: string; label: string }) => (
   </Nav.Item>
 )
 
-const RotatingLogo = styled.img`
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  -webkit-transition-property: transform;
-  transition-property: transform;
-
-  &:hover,
-  &:focus,
-  &:active {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-  }
-`
-
 const StyledHeaderContainer = styled.div`
   font-family: 'Poppins', sans-serif;
   margin-bottom: 15px;
@@ -97,7 +95,7 @@ const StyledNavbar = styled(Navbar)`
 `
 
 const StyledLink = styled(Nav.Link)`
-  color: #fff !important;
+  color: ${({ disabled }) => (disabled ? 'ORIGINAL COLOR' : '#fff !important')};
   &:hover {
     color: #d6d6d6 !important;
     transition: all 0.3s ease-in-out;

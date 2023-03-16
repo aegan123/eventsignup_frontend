@@ -1,0 +1,41 @@
+name: Integration tests
+
+on:
+  push:
+    branches: ['develop', 'feature/keycloak']
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:node18.12.0-chrome107
+      env:
+        REACT_APP_KEYCLOAK_URL: http://keycloak:8080
+
+    services:
+      keycloak:
+        image: ghcr.io/asteriskiry/keycloak
+        credentials:
+          username: ${{ secrets.gh_user }}
+          password: ${{ secrets.gh_token }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Authenticate to github packages
+        run: echo '//npm.pkg.github.com/:_authToken=${{ secrets.gh_token }}' > ~/.npmrc
+
+      - name: Run cypress tests
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+          start: npm start
+          wait-on: 'http://localhost:3000'
+          env: KEYCLOAK_URL=http://keycloak:8080
+
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
