@@ -92,6 +92,7 @@ const StyledHeaderContainer = styled.div`
 const StyledNavbar = styled(Navbar)`
   background-color: #2b8c49;
   box-shadow: 0 0 0.7em #8e8d8d;
+  padding: 0.5rem 1rem;
 `
 
 const StyledLink = styled(Nav.Link)`
