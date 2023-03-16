@@ -25,7 +25,6 @@
     "flag-icons": "^6.6.6",
     "i18next": "^22.4.10",
     "i18next-browser-languagedetector": "^7.0.1",
-    "jquery": "^3.6.1",
     "legacy-bootstrap": "npm:bootstrap@4.4.1",
     "legacy-fontawesome": "npm:@fortawesome/fontawesome-free@5.13.0",
     "react": "^18.2.0",
@@ -70,7 +69,7 @@
     ]
   },
   "devDependencies": {
-    "@asteriskiry/eventsignup_backend-types": "1.0.0",
+    "@asteriskiry/eventsignup_backend-types": "20230315.0.0",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
     "@storybook/addon-interactions": "^6.5.16",

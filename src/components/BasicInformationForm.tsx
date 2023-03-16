@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { QuotaModal } from './QuotaModal'
 import { EventBasicInformation } from '../types/types'
+import '../assets/styles.css'
 
 export const BasicInformationForm = ({
   onSubmit,
@@ -12,6 +13,8 @@ export const BasicInformationForm = ({
   onSubmit: (data: EventBasicInformation) => void
 }) => {
   const [modalVisible, setModalVisible] = useState(false)
+  const [validated, setValidated] = useState(false)
+
   const [quotas, setQuotas] = useState<Quota[]>([])
   const [name, setName] = useState('')
   const [place, setPlace] = useState('')
@@ -26,8 +29,32 @@ export const BasicInformationForm = ({
   const [hasParticipantLimit, setHasParticipantLimit] = useState(false)
   const [hasQuotas, setHasQuotas] = useState(false)
 
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    console.log('submit')
+
+    e.preventDefault()
+    e.stopPropagation()
+    const form = e?.currentTarget
+    if (form.checkValidity() === true) {
+      onSubmit({
+        name,
+        place,
+        description,
+        price: Number(price) || undefined,
+        startDate: parseDate(startDate) || '',
+        endDate: parseDate(endDate),
+        signupStarts: parseDate(signupStarts),
+        signupEnds: parseDate(signupEnds),
+        bannerImg: image?.name || undefined,
+        minParticipants: 0,
+        maxParticipants: Number(maxParticipants) || undefined,
+      })
+    }
+    setValidated(true)
+  }
+
   return (
-    <Form>
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
         <Form.Label>Tapahtuman nimi</Form.Label>
         <Form.Control
@@ -63,16 +90,25 @@ export const BasicInformationForm = ({
           required
           type="number"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => {
+            console.log(e)
+            setPrice(e.target.value)
+          }}
         />
       </Form.Group>
       <Form.Group className="mb-3">
         <Row>
           <Col md={6}>
             <Form.Label>Tapahtuman aloituspäivä</Form.Label>
-            <DatePicker
+            <Form.Control
+              required
+              as={DatePicker}
               selected={startDate}
-              onChange={(date: Date) => setStartDate(date)}
+              onChange={(date) => {
+                // eslint-disable-next-line
+                //@ts-ignore
+                setStartDate(date)
+              }}
               showTimeSelect
               timeFormat="HH:mm"
               dateFormat="dd.M.yyyy HH:mm"
@@ -80,9 +116,14 @@ export const BasicInformationForm = ({
           </Col>
           <Col md={6}>
             <Form.Label>Tapahtuman lopetuspäivä</Form.Label>
-            <DatePicker
+            <Form.Control
+              as={DatePicker}
               selected={endDate}
-              onChange={(date: Date) => setEndDate(date)}
+              onChange={(date) => {
+                // eslint-disable-next-line
+                //@ts-ignore
+                setEndDate(date)
+              }}
               showTimeSelect
               timeFormat="HH:mm"
               dateFormat="dd.M.yyyy HH:mm"
@@ -94,9 +135,14 @@ export const BasicInformationForm = ({
         <Row>
           <Col md={6}>
             <Form.Label>Ilmoittautumisen aloituspäivä</Form.Label>
-            <DatePicker
+            <Form.Control
+              as={DatePicker}
               selected={signupStarts}
-              onChange={(date: Date) => setSignupStarts(date)}
+              onChange={(date) => {
+                // eslint-disable-next-line
+                //@ts-ignore
+                setSignupStarts(date)
+              }}
               showTimeSelect
               timeFormat="HH:mm"
               dateFormat="dd.M.yyyy HH:mm"
@@ -104,9 +150,14 @@ export const BasicInformationForm = ({
           </Col>
           <Col md={6}>
             <Form.Label>Ilmoittautumisen lopetuspäivä</Form.Label>
-            <DatePicker
+            <Form.Control
+              as={DatePicker}
               selected={signupEnds}
-              onChange={(date: Date) => setSignupEnds(date)}
+              onChange={(date) => {
+                // eslint-disable-next-line
+                //@ts-ignore
+                setSignupEnds(date)
+              }}
               showTimeSelect
               timeFormat="HH:mm"
               dateFormat="dd.M.yyyy HH:mm"
@@ -115,6 +166,7 @@ export const BasicInformationForm = ({
         </Row>
       </Form.Group>
       <Form.Group className="mb-3">
+        <Form.Label>Bannerikuva</Form.Label>
         <Form.Control
           type="file"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,25 +235,7 @@ export const BasicInformationForm = ({
         </Row>
       </Form.Group>
 
-      <Button
-        variant="primary"
-        onClick={() =>
-          onSubmit({
-            name,
-            place,
-            description,
-            price: Number(price) || undefined,
-            startDate: parseDate(startDate) || '',
-            endDate: parseDate(endDate),
-            signupStarts: parseDate(signupStarts),
-            signupEnds: parseDate(signupEnds),
-            bannerImg: image?.name || undefined,
-            minParticipants: 0,
-            maxParticipants: Number(maxParticipants) || undefined,
-          })
-        }
-        style={{ marginRight: '10px' }}
-      >
+      <Button variant="primary" type="submit" style={{ marginRight: '10px' }}>
         Jatka
       </Button>
       <Button variant="secondary" onClick={(e) => e}>
