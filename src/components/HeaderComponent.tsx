@@ -38,8 +38,12 @@ const HeaderComponent = ({
         {loggedIn && (
           <Navbar.Collapse className="justify-content-center">
             <Nav>
-              <Link href="/management" label={t('header.ownEvents')} />
-              <Link href="/newEvent" label={t('header.newEvent')} />
+              <Nav.Item>
+                <Link href="/management" label={t('header.ownEvents')} />
+              </Nav.Item>
+              <Nav.Item data-cypress="create-new-event">
+                <Link href="/newEvent" label={t('header.newEvent')} />
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
         )}
@@ -92,6 +96,7 @@ const StyledHeaderContainer = styled.div`
 const StyledNavbar = styled(Navbar)`
   background-color: #2b8c49;
   box-shadow: 0 0 0.7em #8e8d8d;
+  padding: 0.5rem 1rem;
 `
 
 const StyledLink = styled(Nav.Link)`
